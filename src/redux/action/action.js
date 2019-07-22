@@ -35,16 +35,18 @@ export function getQuestions(data, nav){
 }
 export function setAnswer(data){
     return(dispatch) => {
-        const {question_id, user_id, answer, attachment=""} = data
+        const {userId, questionId, answer, attachment=""} = data
         dispatch({
             type:'SET_ANSWER',
-            payload: axios.post(`${URL}/answer`,{
-                question_id,
-                user_id,
+            payload: axios.post(`${CONSTANT.BASE_URL}api/v1/answer`,{
+                userId,
+                questionId,
                 answer,
                 attachment
             })
         })
-        console.log(data)
+        console.log(questionId)
+        console.log(userId)
+        console.log(answer)
     }
 }

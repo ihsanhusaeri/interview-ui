@@ -28,6 +28,7 @@ import axios from 'axios'
 import {connect} from 'react-redux'
 import {setAnswer} from '../redux/action/action'
 
+
 class Question extends Component{
     constructor(){
         super()
@@ -38,9 +39,10 @@ class Question extends Component{
         options:null,
         isRadioSelected:false,
         isCheckBoxSelected:false,
-        radioAnswer:"",
+        // radioAnswer:"",
         checkAnswer:[],
-        textAnswer:"",
+        // textAnswer:"",
+        answer:"",
         type:""
     }
     componentDidMount(){
@@ -50,23 +52,55 @@ class Question extends Component{
     }
     handleNext(){
         // if(this.state.currentQuestion < this.props.questions.length-1){
-        //     this.setState({currentQuestion : this.state.currentQuestion + 1})
-        //     this.setState({questions:this.props.questions[this.state.currentQuestion]})
-            
-        // }else{
-        //     this.props.navigation.navigate('Interview')
-        // }
-        const data ={
-            user_id: 24,
-            question_id: this.props.questions[this.state.currentQuestion].id,
-            answer:this.state.textAnswer
+            // if(this.props.questions[this.state.currentQuestion].type == 'text'){    
+                // const data ={
+                //     userId: 25,
+                //     questionId: this.props.questions[this.state.currentQuestion].id,
+                //     answer:this.state.answer
+                // }
+                // this.props.setAnswer(data)
+            // }else if()
+        let data
+        switch(this.props.questions[this.state.currentQuestion].type){
+            case 'text':
+                data ={
+                    userId: this.props.userId,
+                    questionId: this.props.questions[this.state.currentQuestion].id,
+                    answer:this.state.answer
+                }
+                this.props.setAnswer(data)
+                break;
+            case 'multiple choice':
+                data ={
+                    userId:this.props.userId,
+                    questionId:this.props.questions[this.state.currentQuestion].id,
+                    answer:this.state.answer
+                }
+                this.props.setAnswer(data)
+                break;
+            case 'multi select':
+                data = {
+                    userId:this.props.userId, 
+                    questionId:this.props.questions[this.state.currentQuestion].id,
+                    answer:this.state.checkAnswer.toString()
+                }
+                this.props.setAnswer(data)
+                console.log(data)
+                break
+            default:
+                alert("interview")
         }
-        // console.log(this.props.user)
-        this.props.setAnswer(data)
+        if(this.state.currentQuestion < this.props.questions.length-1){
+            this.setState({currentQuestion : this.state.currentQuestion + 1})
+            this.setState({questions:this.props.questions[this.state.currentQuestion]})
+        }else{
+            // this.props.navigation.navigate('Interview')
+        }
+        
     }
     handleRadio(option){
-        this.setState({radioAnswer:option})
-        console.log(option)
+        this.setState({answer:option})
+        // console.log(option)
     }
     handleCheckBox(option){
         let temp = this.state.checkAnswer
@@ -77,11 +111,10 @@ class Question extends Component{
             temp.push(option)
         }
         this.setState({checkAnswer:temp})
-        console.log(this.state.checkAnswer)
+        // console.log(this.state.checkAnswer)
     }
 
     render(){
-        console.log(this.props.user)
        
         if(this.props.fetching){
             return(
@@ -94,9 +127,7 @@ class Question extends Component{
                 const {currentQuestion} = this.state
                 const {questions} = this.props
                 const options = []
-                console.log("ini data user di question")
-                console.log(this.props.user)
-                console.log(this.props.fetched)
+               
                 if(questions[currentQuestion].type != 'text'){
                     let optionsProps = questions[currentQuestion].options.split(',')
                     for(let i =0; i < optionsProps.length; i++){
@@ -116,10 +147,12 @@ class Question extends Component{
                                             placeholderTextColor='white'
                                             style={styles.inputAnswer}
                                             multiline={true}
-                                            value={this.state.textAnswer}
-                                            onChangeText={(textAnswer) => this.setState({textAnswer})}/>
+                                            // value={this.state.textAnswer}
+                                            // onChangeText={(textAnswer) => this.setState({textAnswer})}
+                                            value={this.state.answer}
+                                            onChangeText={(answer) => this.setState({answer})}/>
                                     </Item>
-                                :questions[currentQuestion].type == 'multiple choice'?
+                                :questions[currentQuestion].type == 'multi select'?
                                             
                                     <FlatList
                                         data = {options}
@@ -152,9 +185,9 @@ class Question extends Component{
                                                     {/* <Radio selected={this.state.radioAnswer === options[index].option}
                                                         onPress={()=> this.handleRadio(options[index].option)}
                                                         value={this.state.radioAnswer}/> */}
-                                                        <Radio selected={this.state.radioAnswer === item.option}
+                                                        <Radio selected={this.state.answer === item.option}
                                                         onPress={() => this.handleRadio(item.option)}
-                                                        value={this.state.radioAnswer}/>
+                                                        value={this.state.answer}/>
                                                 </Right>
                                             </ListItem>
                                         )
@@ -219,7 +252,7 @@ const mapStateToProps = (state) =>({
     questions: state.reducer.questions,
     fetched:state.reducer.fetched,
     fetching: state.reducer.fetching,
-    // userId: state.reducer.user[0].id,
+    userId: state.reducer.user[0].id,
     // user:state.reducer.user
 })
 
