@@ -40,6 +40,7 @@ class Question extends Component{
         isCheckBoxSelected:false,
         radioAnswer:"",
         checkAnswer:[],
+        textAnswer:"",
         type:""
     }
     componentDidMount(){
@@ -48,20 +49,20 @@ class Question extends Component{
         }
     }
     handleNext(){
-        if(this.state.currentQuestion < this.props.questions.length-1){
-            this.setState({currentQuestion : this.state.currentQuestion + 1})
-            this.setState({questions:this.props.questions[this.state.currentQuestion]})
+        // if(this.state.currentQuestion < this.props.questions.length-1){
+        //     this.setState({currentQuestion : this.state.currentQuestion + 1})
+        //     this.setState({questions:this.props.questions[this.state.currentQuestion]})
             
-        }else{
-            this.props.navigation.navigate('Interview')
-        }
-        // const data ={
-        //     userId: this.props.userId,
-        //     questionId: this.props.questions[this.state.currentQuestion].id,
-        //     answer:this.state.textAnswer
+        // }else{
+        //     this.props.navigation.navigate('Interview')
         // }
+        const data ={
+            user_id: 24,
+            question_id: this.props.questions[this.state.currentQuestion].id,
+            answer:this.state.textAnswer
+        }
         // console.log(this.props.user)
-        // this.props.setAnswer(data, this.props.navigation)
+        this.props.setAnswer(data)
     }
     handleRadio(option){
         this.setState({radioAnswer:option})
@@ -80,6 +81,7 @@ class Question extends Component{
     }
 
     render(){
+        console.log(this.props.user)
        
         if(this.props.fetching){
             return(
@@ -217,7 +219,8 @@ const mapStateToProps = (state) =>({
     questions: state.reducer.questions,
     fetched:state.reducer.fetched,
     fetching: state.reducer.fetching,
-    user: state.reducer.user
+    // userId: state.reducer.user[0].id,
+    // user:state.reducer.user
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Question)
