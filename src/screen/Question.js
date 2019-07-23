@@ -23,8 +23,7 @@ import {
     Radio
     
 }from 'native-base'
-import CONSTANT from '../../url'
-import axios from 'axios'
+import CountDown from 'react-native-countdown-component'
 import {connect} from 'react-redux'
 import {setAnswer} from '../redux/action/action'
 
@@ -136,6 +135,27 @@ class Question extends Component{
                 }
                 return(
                     <Container style={styles.container}>
+                        <Header style={styles.header}>
+                            <Left>
+                                <Text>
+                                    Question {this.state.currentQuestion+1} of {this.props.questions.length}
+                                </Text>
+                            </Left>
+                            <Right>
+                                <CountDown
+                                    until={5}
+                                    onFinish={() => this.handleNext()}
+                                    timeToShow={['M', 'S']}
+                                    timeLabels={{m: '', s: ''}}
+                                    size={15}
+                                    digitStyle={{backgroundColor: '#FFF'}}
+                                    digitTxtStyle={{color: '#000'}}
+                                    timeLabelStyle={{color: 'red', fontWeight: 'bold'}}
+                                    separatorStyle={{color: '#000'}}
+                                    showSeparator
+                                />
+                            </Right>
+                        </Header>
                         <Body>
                             <Form>
                                 <Text style={styles.textQuestion}>
@@ -215,9 +235,10 @@ class Question extends Component{
 const styles = StyleSheet.create({
     container:{
         flex: 1,
-        alignItems:'center',
-        justifyContent:'center',
         backgroundColor:'#126cfc'
+    },
+    header:{
+        backgroundColor:'#ffb300'
     },
     textQuestion:{
         color:'white',
@@ -252,7 +273,7 @@ const mapStateToProps = (state) =>({
     questions: state.reducer.questions,
     fetched:state.reducer.fetched,
     fetching: state.reducer.fetching,
-    userId: state.reducer.user[0].id,
+    // userId: state.reducer.user[0].id,
     // user:state.reducer.user
 })
 

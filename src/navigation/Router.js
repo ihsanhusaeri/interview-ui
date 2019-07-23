@@ -29,7 +29,7 @@ const RootStack = createStackNavigator({
     }  
 },
     {
-        initialRouteName:'Submit'
+        initialRouteName:'Home'
     }
 )
 export default createAppContainer(RootStack)
